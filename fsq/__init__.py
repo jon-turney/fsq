@@ -67,6 +67,8 @@ from push import push
 # utility relies on: exceptions, scan, enqueue and done
 from utility import fork_exec_items
 
+# ratelimit relies on: nothing
+from ratelimit import ratelimited, RatelimitedIterator
 
 __all__ = [ 'FSQError', 'FSQEnvError', 'FSQEncodeError', 'FSQTimeFmtError',
             'FSQMalformedEntryError', 'FSQCoerceError', 'FSQEnqueueError',
@@ -84,4 +86,4 @@ __all__ = [ 'FSQError', 'FSQEnvError', 'FSQEncodeError', 'FSQTimeFmtError',
             'host_untrigger', 'host_trigger_pull', 'host_root',
             'uninstall_host', 'FSQReenqueueError', 'reenqueue', 'sreenqueue',
             'vreenqueue', 'vsreenqueue', 'remote', 'FSQPushError', 'push',
-            'queues', 'fork_exec_items', ]
+            'queues', 'fork_exec_items', 'ratelimited', 'RatelimitedIterator']
