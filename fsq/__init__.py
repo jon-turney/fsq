@@ -56,7 +56,7 @@ from enqueue import enqueue, senqueue, venqueue, vsenqueue, reenqueue,\
                     sreenqueue, vreenqueue, vsreenqueue
 
 # scan relies on: exceptions, constants, path, items, configure, internal
-from scan import FSQScanGenerator, scan
+from scan import FSQScanGenerator, scan, scan_forever
 
 # remote.v1 relies on: enqueue
 import remote
@@ -79,7 +79,7 @@ __all__ = [ 'FSQError', 'FSQEnvError', 'FSQEncodeError', 'FSQTimeFmtError',
             'uninstall', 'encode', 'decode', 'construct', 'deconstruct',
             'enqueue', 'senqueue', 'venqueue', 'vsenqueue', 'success', 'fail',
             'done', 'fail_tmp', 'fail_perm', 'FSQWorkItem',
-            'FSQScanGenerator', 'scan', 'install_host', 'FSQHostsError',
+            'FSQScanGenerator', 'scan', 'scan_forever', 'install_host', 'FSQHostsError',
             'hosts', 'down_host', 'up_host', 'host_is_down', 'host_trigger',
             'host_untrigger', 'host_trigger_pull', 'host_root',
             'uninstall_host', 'FSQReenqueueError', 'reenqueue', 'sreenqueue',
