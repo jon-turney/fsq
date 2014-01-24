@@ -72,7 +72,7 @@ def main(argv):
                                    'lock', 'no-lock', 'empty-ok', 'no-done',
                                    'ttl=', 'max-tries=', 'success-code=',
                                    'fail-tmp-code=', 'fail-perm-code=',
-                                   'verbose', 'all-hosts', 'host=', '--max-rate='))
+                                   'verbose', 'all-hosts', 'host=', 'max-rate='))
     except getopt.GetoptError, e:
         barf('invalid flag: -{0}{1}'.format('-' if 1 < len(e.opt) else '',
              e.opt))
