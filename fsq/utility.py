@@ -31,6 +31,8 @@ from . import scan, constants as _c, const, reenqueue, success, fail_tmp, \
               FSQDownError, FSQReenqueueError, FSQError, FSQInstallError, \
               FSQEnqueueError
 
+import fsq.ratelimit
+
 _VERBOSE = False
 _CHARSET = _c.FSQ_CHARSET
 
@@ -99,7 +101,8 @@ def setenv(item, timefmt):
 def fork_exec_items(queue, ignore_down=False, no_open=False, host=False,
                     hosts=None, _CHARSET=_c.FSQ_CHARSET, no_done=False,
                     link=False, trigger=False, exec_args=None, set_env=True,
-                    verbose=False, empty_ok=False):
+                    verbose=False, empty_ok=False, max_rate=None):
+
     global _VERBOSE
     _VERBOSE = verbose
     main_rc = 0
@@ -115,6 +118,11 @@ def fork_exec_items(queue, ignore_down=False, no_open=False, host=False,
         barf(e.strerror)
     except FSQCoerceError, e:
         barf('cannot coerce queue; charset={0}'.format(_CHARSET))
+   
+    if max_rate:
+        #max_rate per one second
+        items = fsq.ratelimit.ratelimited(max_rate, 1, items)
+    
     try:
         fail_perm = const('FSQ_FAIL_PERM')
         fail_tmp = const('FSQ_FAIL_PERM')

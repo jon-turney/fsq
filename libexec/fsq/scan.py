@@ -48,6 +48,7 @@ def usage(asked_for=0):
         shout('        [-S success_code|--success-code=int]', f)
         shout('        [-T fail_tmp_code|--fail-tmp-code=int]', f)
         shout('        [-F fail_perm_code|--fail-perm-code=int]', f)
+        shout('        [-r rate | --max-rate=int]', f)
         shout('        queue prog [args [...]]', f)
     sys.exit(exit)
 
@@ -62,15 +63,16 @@ def main(argv):
     no_done = False
     host = False
     hosts = []
+    max_rate = None
 
     _PROG = argv[0]
     try:
-        opts, args = getopt.getopt(argv[1:], 'hveEnilLkDt:m:S:T:F:aA:', ( 'help',
+        opts, args = getopt.getopt(argv[1:], 'hveEnilLkDt:m:S:T:F:aA:r:', ( 'help',
                                    'env', 'no-env', 'no-open', 'ignore-down',
                                    'lock', 'no-lock', 'empty-ok', 'no-done',
                                    'ttl=', 'max-tries=', 'success-code=',
                                    'fail-tmp-code=', 'fail-perm-code=',
-                                   'verbose', 'all-hosts', 'host=' ))
+                                   'verbose', 'all-hosts', 'host=', '--max-rate='))
     except getopt.GetoptError, e:
         barf('invalid flag: -{0}{1}'.format('-' if 1 < len(e.opt) else '',
              e.opt))
@@ -109,6 +111,11 @@ def main(argv):
                 fsq.set_const('FSQ_FAIL_TMP', opt)
             elif '-F' == flag or '--fail-perm-code' == flag:
                 fsq.set_const('FSQ_FAIL_PERM', opt)
+            elif '-r' == flag or '--max-rate' == flag:
+                try:
+                    max_rate = int(opt)
+                except ValueError:
+                    raise fsq.FSQCoerceError
             elif '-h' == flag or '--help' == flag:
                 usage(1)
     except ( fsq.FSQEnvError, fsq.FSQCoerceError, ):
@@ -122,7 +129,7 @@ def main(argv):
     fsq.fork_exec_items(args[0], ignore_down=ignore_down, host=host,
                         no_open=no_open, hosts=hosts if hosts else None,
                         no_done=no_done, set_env=set_env, exec_args=exec_args,
-                        verbose=_VERBOSE, empty_ok=empty_ok)
+                        verbose=_VERBOSE, empty_ok=empty_ok, max_rate=max_rate)
 
 if __name__ == '__main__':
     main(sys.argv)
