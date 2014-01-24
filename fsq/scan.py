@@ -118,6 +118,28 @@ class FSQScanGenerator(object):
         # if we break through loop with no exception, we're done
         raise StopIteration()
 
+def scan_forever(queue, *args, **kwargs):
+    """Return an infinite iterator over an fsq queue that blocks waiting
+       for the queue trigger. Work is yielded as FSQWorkItem objects when
+       available, assuming the default generator (FSQScanGenerator) is
+       in use.
+
+       Essentially, this function wraps fsq.scan() and blocks for more work.
+
+       It takes all the same parameters as scan(), plus process_once_now,
+       which is a boolean to determine if an initial .scan() is run before
+       listening to the trigger. This argument defaults to True.
+    """
+    process_once_now = kwargs.get('process_once_now', True)
+    if process_once_now:
+        for work in scan(queue, *args, **kwargs):
+            yield work
+    while True:
+        with open(fsq_path.trigger(queue), 'rb') as t:
+            t.read(1)
+        for work in scan(queue, *args, **kwargs):
+            yield work
+
 def scan(queue, lock=None, ttl=None, max_tries=None, ignore_down=False,
          no_open=False, generator=FSQScanGenerator, host=False, hosts=None):
     '''Given a queue, generate a list of files in that queue, and pass it to

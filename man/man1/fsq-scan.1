@@ -34,6 +34,8 @@ arguments.
 .br
 .BR "         " "[ " \-F fail_perm_code| \-\-fail\-perm\-code \=number " ]"
 .br
+.BR "         " "[ " \-r rate| \-\-max\-rate \=number " ]"
+.br
 .IR "" "         " queue " " program " [ " args " [...]]"
 .SH DESCRIPTION
 .BR fsq\-scan (1)
@@ -312,6 +314,17 @@ echo foo bar
 	foo bar
 .sp
 Use with caution.
+.TP
+.BR \-r ", " \-\-max\-rate
+.br
+Specify the maximum rate that
+.BR fsq\-scan (1)
+can execute an instance of
+.I program
+in tasks per second. Not giving this parameter is the same as -r 0, which disables rate limiting.
+.sp
+default:
+.B 0
 .TP
 .BR \-D ", " \-\-no\-done
 .br

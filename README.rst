@@ -24,19 +24,19 @@ The fsq project lives on github_, and is available via pip_.
 .. _github: https://github.com/axialmarket/fsq
 .. _pip: https://pypi.python.org/pypi?:action=display&name=fsq
 
-Installing v0.2.3 From Pip
+Installing v0.2.4 From Pip
 --------------------------
 
 ::
 
-    sudo pip install fsq==0.2.3
+    sudo pip install fsq==0.2.4
 
-Installing v0.2.3 From Source
+Installing v0.2.4 From Source
 -----------------------------
 
 ::
 
-    curl https://github.com/axialmarket/fsq/archive/version_0.2.3.tar.gz | tar vzxf -
+    curl https://github.com/axialmarket/fsq/archive/version_0.2.4.tar.gz | tar vzxf -
     cd fsq
     sudo python setup.py install
 
