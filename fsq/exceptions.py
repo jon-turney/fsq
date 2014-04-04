@@ -92,7 +92,12 @@ class FSQHostsError(FSQError):
 
 class FSQReenqueueError(FSQError):
     '''An error occured while reenqueuing an item'''
+    pass
 
 class FSQPushError(FSQError):
-    '''An error occured while push and item to a remote server'''
+    '''An error occured while pushing an item to a remote server'''
+    pass
 
+class FSQRemoteTriggerError(FSQError):
+    '''An error occured while triggering a queue on a remote server'''
+    pass

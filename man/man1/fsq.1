@@ -212,23 +212,61 @@ default:
 .B trigger\-s
 .SH "FSQ COMMANDS"
 .TP
+.BR fsq\-add\-host (1)
+.br
+Install a host to
+.BR fsq (7)
+host-queues.
+.TP
 .BR fsq\-down (1)
 .br
 Mark a queue down to prevent scanning.
+.TP
+.BR fsq\-down-host (1)
+.br
+Mark a host-queue down to prevent scanning.
 .TP
 .BR fsq\-enqueue (1)
 .br
 Enqueue a work item to be processed at scan\-time.
 .TP
+.BR fsq\-install (1)
+.br
+Remove a host from
+.BR fsq (7)
+host-queues.
+.TP
+.BR fsq\-jsonprcd (1)
+.br
+A JSON-RPC server to support distributing
+.BR fsq (7)
+work items.
+.TP
+.BR fsq\-push (1)
+.br
+Distribute a work item from a host-queue to a remote
+.BR fsq (7)
+queue.
+.TP
+.BR fsq\-rm\-host (1)
+.br
+Install a
+.BR fsq (7)
+queue.
+.TP
 .BR fsq\-scan (1)
 .br
-Scan an
+Scan a
 .BR fsq (7)
 queue and execute a program for each work item.
 .TP
 .BR fsq\-up (1)
 .br
 Mark a queue up to enable scanning.
+.TP
+.BR fsq\-up\-host (1)
+.br
+Mark a host-queue up to enable scanning.
 .SH ENVIRONMENT
 .BR fsq (1)
 makes use of all
@@ -265,3 +303,4 @@ default:
 
 .SH SEE ALSO
 .BR fsq\-down "(1), " fsq\-enqueue "(1), " fsq\-scan "(1), " fsq\-up "(1), " environ "(7), " fifo "(7), " fsq "(7)"
+.BR fsq\-down\-host " (1), " fsq\-add\-host " (1), " fsq\-jsonrpcd " (1), " fsq\-up\-host "(1), " fsq\-push "(1)"

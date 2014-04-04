@@ -1,0 +1,52 @@
+.TH fsq\-jsonrpcd 1 "2014-04-04" "Axial" "Axial System Commands Manual"
+.SH NAME
+fsq\-jsonrpcd \- A JSON-RPC server to support distributing
+.BR fsq (7)
+work items.
+.SH SYNOPSIS
+.B "fsq jsonrpcd"
+.BR "" "[ " flags " ]"
+.IR " " "  " host " " port "
+.br
+.B "fsq jsonrpcd"
+.BR "" "[ " "\-h" "|" "\-\-help " "]"
+.BR "" "[ " "\-v" "|" "\-\-verbose " "]"
+.br
+.BR "             " "[ " "\-w" | "\-\-workers" " ]"
+.br
+.IR "           " "  " host " " port "
+.SH DESCRIPTION
+.BR fsq\-jsonrpcd (1)
+is a preforked server that serves on
+.I host
+:
+.I port.
+It is based on jsonrpclib and supports recycling its children on SIGHUP.
+It supports commands that come from
+.BR fsq-push (1).
+.SH OPTIONS
+.TP
+.BR \-h ", " \-\-help
+.br
+Help.  Print usage to stdout and exit 0.
+.TP
+.BR \-v ", " \-\-verbose
+.br
+Verbose.  Print additional diagnostic information to stderr.
+.TP
+.BR \-w ", " \-\-workers=workers
+.br
+Workers. The parent fork will support
+.BR workers
+many children.
+.sp
+.SH "EXIT STATUS"
+The
+.B fsq\-jsonrpcd
+program exits 0 for success, 100 for bad usage, and 111 for expected error
+cases.  All other exit statuses imply that something beyond the imagination of
+the programmer has occured.
+.SH SEE ALSO
+.BR fsq\-push"(1), " fork  "(1), " signal "(1), " fsq (7)
+.SH REFERENCES
+.BR jsonrpclib " \- " "https://github.com/joshmarshall/jsonrpclib"
