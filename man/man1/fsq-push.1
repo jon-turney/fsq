@@ -1,0 +1,92 @@
+.TH fsq\-push 1 "2014-04-4" "Axial" "Axial System Commands Manual"
+.SH NAME
+fsq\-push \- Distribute a work item from a host-queue to a remote
+.BR fsq (7)
+queue.
+.SH SYNOPSIS
+.B "fsq push"
+.BR "" "[ " flags " ]"
+.IR " src_queue " "  "trg_queue " " host " " work-item " [ " work-item " [...]]]"
+.br
+.B "fsq push"
+.BR "" "[ " "\-h" "|" "\-\-help " "]"
+.BR "" "[ " "\-v" "|" "\-\-verbose " "]"
+.br
+.BR "         " "[ " "\-p" | "\-\-protocol " " ]"
+.BR "" "[ " "\-L"| "\-\-no\-lock " " ]"
+.br
+.BR "         " "[ " "\-i"| "\-\-ignore\-listener " " ]"
+.BR "" "[ " "\-t"| "\-\-trigger " " ]"
+.br
+.IR "         src_queue" " " trg_queue " " " work_item " [ " work_item " [...]]]"
+.SH DESCRIPTION
+The
+.BR fsq\-push (1)
+scans the
+.BR fsq (7)
+.I src_queue's
+.IR "FSQ_HOSTS"
+directory for
+.I work items
+and distributes them over
+.I protocol
+to the
+.BR fsq (7)
+queue
+.I trg_queue
+on
+.I host.
+.SH OPTIONS
+.TP
+.BR \-h ", " \-\-help
+.br
+Help.  Print usage to stdout and exit 0.
+.TP
+.BR \-v ", " \-\-verbose
+.br
+Verbose.  Print additional diagnostic information to stderr.
+.TP
+.BR \-p ", " \-\-protocol
+.br
+Protocol. Transport
+.R work items
+using the specified protocol. Currently only jsonrpc is supported
+.TP
+.BR \-L ", " \-\-no\-lock
+.br
+Do not attempt to acquire an exclusive lock on a work\-item prior to
+.I program
+execution.  Should
+.B \-\-no\-lock
+be specified, the user should take care to ensure that no other processes may
+work on a work\-item.  If users are using the
+.BR trigger\-listen (1)
+program, they may send the flag
+.BI \-c 1
+to ensure concurrency of
+.IR 1,
+otherwise users are encouraged to use a locking program (ex:
+.BR flock "(1), " lockf "(1), or " setlock "(8))"
+to ensure that work is not processed multiple times.
+.TP
+.BR \-i ", " \-\-ignore\-listener
+.br
+If not specified, exit 111 if there is no listener for the
+.I src_queue\'s "FSQ_TRIGGER".
+.BR \-t", " \-\-trigger
+.br
+pull the
+.I "FSQ_TRIGGER"
+once the work-item is distributed to
+.I trg_queue
+on
+.I host.
+.sp
+.SH "EXIT STATUS"
+The
+.B fsq\-push
+program exits 0 for success, 100 for bad usage, and 111 for expected error
+cases.  All other exit statuses imply that something beyond the imagination of
+the programmer has occured.
+.SH SEE ALSO
+.BR fsq\-scan "(1), " fsq\-add\-host "(1), " fsq\-jsonrpc "(1), " fsq (7)

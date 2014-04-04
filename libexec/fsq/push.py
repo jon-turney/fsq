@@ -31,10 +31,10 @@ def usage(asked_for=0):
     shout('{0} [opts] src_queue trg_queue host item_id [item_id [...]]'.format(
           os.path.basename(_PROG)), f)
     if asked_for:
-        shout('{0} [-p|--protocol=jsonrpc] [-L|--no-lock] [-t|--trigger-pull] '\
+        shout('{0} [-p|--protocol=jsonrpc] [-L|--no-lock] [-t|--trigger] '\
               '[-i|--ignore-listener] <proto>://<host>:<port>/url'\
               .format(os.path.basename(_PROG)), f)
-        shout('{0} [-p|--protocol=jsonrpc] [-L|--no-lock] [-t|--trigger-pull]'\
+        shout('{0} [-p|--protocol=jsonrpc] [-L|--no-lock] [-t|--trigger]'\
               '[-i|--ignore-listener] unix://var/sock/foo.sock'\
               .format(os.path.basename(_PROG)), f)
         shout('        src_queue trg_queue host_queue item [item [...]]', f)
@@ -43,12 +43,12 @@ def usage(asked_for=0):
 def main(argv):
     global _PROG, _VERBOSE
     protocol = 'jsonrpc'
-    lock, trigger_pull, ignore_listener = True, False, False
+    lock, trigger, ignore_listener = True, False, False
 
     _PROG = argv[0]
     try:
         opts, args = getopt.getopt(argv[1:], 'vhLtip:',
-                     ( '--verbose', '--help', '--no-lock', '--trigger-pull',
+                     ( '--verbose', '--help', '--no-lock', '--trigger',
                        '--ignore-listener', '--protocol=', ))
         for flag, opt in opts:
             if flag in ( '-v', '--verbose', ):
@@ -57,8 +57,8 @@ def main(argv):
                 protocol = opt
             if flag in ( '-L', '--no-lock', ):
                 lock = False
-            if flag in ( '-t', '--trigger-pull', ):
-                trigger_pull = True
+            if flag in ( '-t', '--trigger', ):
+                trigger = True
             if flag in ( '-i', '--ignore-listener', ):
                 ignore_listener = True
             elif flag in ( '-h', '--help', ):
@@ -77,10 +77,10 @@ def main(argv):
                                             trg_queue))
             item = fsq.FSQWorkItem(src_queue, item_id , host=host, lock=lock)
             fsq.push(item, remote, trg_queue, protocol=protocol)
-            if trigger_pull:
-                fsq.remote_trigger_pull(remote, trg_queue,
-                                        ignore_listener=ignore_listener,
-                                        protocol=protocol)
+            if trigger:
+                fsq.remote_trigger(remote, trg_queue,
+                                   ignore_listener=ignore_listener,
+                                   protocol=protocol)
 
     except ( fsq.FSQEnvError, fsq.FSQCoerceError, ):
         shout('invalid argument for flag: {0}'.format(flag))
