@@ -17,7 +17,8 @@ from exceptions import FSQError, FSQEnvError, FSQEncodeError,\
                        FSQWorkItemError, FSQTTLExpiredError,\
                        FSQMaxTriesError, FSQScanError, FSQDownError,\
                        FSQDoneError, FSQFailError, FSQTriggerPullError,\
-                       FSQHostsError, FSQReenqueueError, FSQPushError
+                       FSQHostsError, FSQReenqueueError, FSQPushError, \
+                       FSQRemoteTriggerError
 
 # constants relies on: exceptions, internal
 import constants
@@ -61,8 +62,8 @@ from scan import FSQScanGenerator, scan, scan_forever
 # remote.v1 relies on: enqueue
 import remote
 
-# push relies on: exceptions, constants and items
-from push import push
+# push relies on: exceptions, constants, items and configure
+from push import push, remote_trigger_pull
 
 # utility relies on: exceptions, scan, enqueue and done
 from utility import fork_exec_items
@@ -86,4 +87,5 @@ __all__ = [ 'FSQError', 'FSQEnvError', 'FSQEncodeError', 'FSQTimeFmtError',
             'host_untrigger', 'host_trigger_pull', 'host_root',
             'uninstall_host', 'FSQReenqueueError', 'reenqueue', 'sreenqueue',
             'vreenqueue', 'vsreenqueue', 'remote', 'FSQPushError', 'push',
-            'queues', 'fork_exec_items', 'ratelimited', 'RatelimitedIterator']
+            'queues', 'fork_exec_items', 'ratelimited', 'RatelimitedIterator',
+            'FSQRemoteTriggerError', 'remote_trigger_pull', ]

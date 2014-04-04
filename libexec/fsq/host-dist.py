@@ -131,9 +131,7 @@ def main(argv):
 
     fsq.fork_exec_items(args[0], ignore_down=ignore_down, host=all_hosts,
                         no_open=no_open, hosts=hosts if hosts else None,
-                        no_done=no_done, verbose=_VERBOSE, link=link)
-    if trigger:
-        fsq.host_trigger_pull(args[0])
-
+                        no_done=no_done, verbose=_VERBOSE, link=link,
+                        trigger=trigger)
 if __name__ == '__main__':
     main(sys.argv)

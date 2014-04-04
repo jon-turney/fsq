@@ -118,11 +118,11 @@ def fork_exec_items(queue, ignore_down=False, no_open=False, host=False,
         barf(e.strerror)
     except FSQCoerceError, e:
         barf('cannot coerce queue; charset={0}'.format(_CHARSET))
-   
+
     if max_rate:
         #max_rate per one second
         items = fsq.ratelimit.ratelimited(max_rate, 1, items)
-    
+
     try:
         fail_perm = const('FSQ_FAIL_PERM')
         fail_tmp = const('FSQ_FAIL_PERM')
@@ -164,6 +164,8 @@ def fork_exec_items(queue, ignore_down=False, no_open=False, host=False,
                         try:
                             chirp(reenqueue(item, queue, hosts=hosts,
                                             all_hosts=host, link=link))
+                            if trigger:
+                                fsq.host_trigger_pull(queue, ignore_listener=True)
                             os._exit(0)
                         except ( FSQReenqueueError ), e:
                             shout('{0}: cannot reenqueue {0}'.format(e.strerror,
