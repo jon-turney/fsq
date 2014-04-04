@@ -16,6 +16,8 @@ setup(
                                     'man/man1/fsq-add-host.1',
                                     'man/man1/fsq-down-host.1',
                                     'man/man1/fsq-up-host.1',
+                                    'man/man1/fsq-push.1',
+                                    'man/man1/fsq-jsonrpcd.1',
                                     'man/man1/fsq-install.1']),
                 ('share/man/man7', ['man/man7/fsq.7']),
                 ('libexec/fsq', ['libexec/fsq/down.py',
