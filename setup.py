@@ -38,6 +38,6 @@ setup(
     license='3-BSD',
     description='File System Queue',
     long_description=open('./README.rst').read(),
-    install_requires= ['jsonrpclib']
+    install_requires= ['jsonrpclib >= 2.0']
 )
 
