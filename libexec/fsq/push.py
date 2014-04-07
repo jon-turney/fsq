@@ -78,7 +78,7 @@ def main(argv):
             item = fsq.FSQWorkItem(src_queue, item_id , host=host, lock=lock)
             fsq.push(item, remote, trg_queue, protocol=protocol)
             if trigger:
-                fsq.remote_trigger(remote, trg_queue,
+                fsq.remote_trigger_pull(remote, trg_queue,
                                    ignore_listener=ignore_listener,
                                    protocol=protocol)
 
