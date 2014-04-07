@@ -1,4 +1,4 @@
-from distutils.core import setup
+from setuptools import setup
 
 setup(
     name='fsq',
@@ -38,6 +38,6 @@ setup(
     license='3-BSD',
     description='File System Queue',
     long_description=open('./README.rst').read(),
-    requires= ['jsonrpclib']
+    install_requires= ['jsonrpclib']
 )
 
