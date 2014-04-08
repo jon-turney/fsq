@@ -17,7 +17,6 @@ import os
 import signal
 import sys
 import getopt
-import jsonrpclib
 
 from jsonrpclib.SimpleJSONRPCServer import SimpleJSONRPCRequestHandler as handler,\
                                            SimpleJSONRPCServer as server
@@ -146,7 +145,6 @@ def main(argv):
     if n_forks < 1:
         barf("error: the number of workers is less than 1: parsed {0}".format(n_forks))
 
-    jsonrpclib.config.version = 1.0
     jsonrpc_srv = server((host, port), logRequests=verbose,
                           requestHandler=MaskedHandler, encoding='utf-8')
 
