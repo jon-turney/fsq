@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='fsq',
-    version='0.2.5',
+    version='0.2.6',
     author='Matthew Story',
     author_email='matt.story@axial.net',
     packages=['fsq', 'fsq.tests', 'fsq.remote', ],
