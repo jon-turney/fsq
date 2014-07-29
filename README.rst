@@ -253,6 +253,7 @@ With Additional Contributions From:
 | Will Martino
 | Will Slippey
 | Jacob Yuan
+| Elise Burke
 
 And Thanks To:
 --------------
