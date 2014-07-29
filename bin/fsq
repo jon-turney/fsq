@@ -16,6 +16,8 @@ import imp
 _CHARSET = os.environ.get('FSQ_CHARSET', locale.getpreferredencoding())
 _PROG = sys.argv[0]
 
+_DEBUG = os.environ.get('FSQ_DEBUG', '') == '1'
+
 # function definitions we need if we're going to communicate that the build is
 # broken.
 def shout(msg, f=sys.stderr):
@@ -27,6 +29,13 @@ def barf(msg, exit=None, f=sys.stderr):
     '''Exit with a log message (usually a fatal error)'''
     exit = fsq.const('FSQ_FAIL_TMP') if exit is None else exit
     shout(msg, f)
+    if _DEBUG:
+        cur_tb = sys.exc_info()[2]
+        if cur_tb:
+            import traceback
+            tb_text = traceback.format_exc()
+            for line in tb_text.split("\n"):
+                shout(line, f)
     sys.exit(exit)
 
 def usage(asked_for=0):

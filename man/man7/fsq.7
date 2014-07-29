@@ -1,4 +1,4 @@
-.TH fsq 7 "2012-07-12" "Axial" "Axial System Commands Manual"
+.TH fsq 7 "2014-07-29" "Axial" "Axial System Commands Manual"
 .SH NAME
 fsq -
 .BR f ile
@@ -578,6 +578,12 @@ for
 will cause
 .B fsq
 to never timeout work-items.
+.sp
+default:
+.B 0
+.TP
+.I FSQ_DEBUG
+If an exception is encountered and this variable is set to 1, the python traceback that caused the error will be printed to stderr.
 .sp
 default:
 .B 0
