@@ -79,7 +79,7 @@ def exit_no_cmd(exec_dir, exit=None, f=sys.stderr):
         shout('', f)
 
     except ( OSError, IOError, ), e:
-        barf(': '.join(e.strerror, exec_dir))
+        barf(': '.join([e.strerror, exec_dir]))
     sys.exit(exit)
 
 ###### WARNING: main exits
