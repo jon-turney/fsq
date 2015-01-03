@@ -53,7 +53,7 @@ To install a queue, simply run::
 Or via the Python API::
 
     >>> import fsq
-    >>> fsq.install(a_queue)
+    >>> fsq.install('a_queue')
 
 Installing a queue will create a directory in ``FSQ_ROOT`` (``/var/fsq/``)::
 
@@ -101,7 +101,7 @@ Or from the Python API::
     >>> import fsq
     >>> for work in fsq.scan('a_queue'):
     ...     print " ".join(work.arguments)
-    ...     fsq.done('a_queue')
+    ...     fsq.done(work)
     args to enqueue
 
 Work that is successfully completed moves to the done directory::
@@ -128,7 +128,7 @@ Or from the Python API::
 
     >>> import fsq
     >>> for work in fsq.scan('a_queue'):
-    ...     fsq.fail('a_queue')
+    ...     fsq.fail(work)
 
 The failed work will be moved to the fail directory::
 
