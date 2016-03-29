@@ -95,7 +95,7 @@ def main(argv):
                 fsq.install(queue, is_down=is_down, is_triggered=is_triggered,
                             hosts=hosts or None,
                             is_host_triggered=is_host_triggered)
-            except fsq.FSQInstallError, e:
+            except fsq.FSQInstallError as e:
                 if e.errno == errno.ENOTEMPTY or e.errno == errno.ENOTDIR:
                     if force:
                         fsq.uninstall(queue)
@@ -110,10 +110,10 @@ def main(argv):
     except ( fsq.FSQEnvError, fsq.FSQCoerceError, ):
         shout('invalid argument for flag: {0}'.format(flag))
         return fsq.const('FSQ_FAIL_PERM')
-    except fsq.FSQInstallError, e:
+    except fsq.FSQInstallError as e:
         shout(e.strerror)
         return fsq.const('FSQ_FAIL_TMP')
-    except getopt.GetoptError, e:
+    except getopt.GetoptError as e:
         shout('invalid flag: -{0}{1}'.format('-' if 1 < len(e.opt) else '',
               e.opt))
         return fsq.const('FSQ_FAIL_TMP')

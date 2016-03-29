@@ -26,27 +26,27 @@ def _lock(fd, lock=False):
     try:
         fcntl.flock(fd, fcntl.LOCK_EX|fcntl.LOCK_NB)
         return fd
-    except (OSError, IOError, ), e:
+    except (OSError, IOError, ) as e:
         if e.errno == errno.EAGAIN:
             raise FSQCannotLockError(e.errno, u'cannot lock')
         raise e
 
 ####### EXPOSED METHODS #######
 def coerce_unicode(s, charset):
-    if isinstance(s, unicode):
+    if isinstance(s, str):
         return s
-    try:
-        return unicode(s, encoding=charset)
-    except (UnicodeEncodeError, UnicodeDecodeError, ), e:
-        raise FSQCoerceError(errno.EINVAL, u'cannot decode: {0}'\
-                             u' (charset: {1})'.format(e.reason, charset))
-    except TypeError, e:
-        if isinstance(s, _COERCE_THESE_TOO):
-            try:
-                return unicode(s)
-            except Exception, e:
-                raise FSQCoerceError(errno.EINVAL, e.message)
-        raise FSQCoerceError(errno.EINVAL, e.message)
+
+    return str(s)
+#    except (UnicodeEncodeError, UnicodeDecodeError, ) as e:
+#        raise FSQCoerceError(errno.EINVAL, u'cannot decode: {0}'\
+#                             u' (charset: {1})'.format(e.reason, charset))
+#    except TypeError as e:
+#        if isinstance(s, _COERCE_THESE_TOO):
+#            try:
+#                return str(s)
+#            except Exception as e:
+#                raise FSQCoerceError(errno.EINVAL, e.message)
+#        raise FSQCoerceError(errno.EINVAL, e.message)
 
 def delimiter_encodeseq(delimiter, encodeseq, charset):
     '''Coerce delimiter and encodeseq to unicode and verify that they are not
@@ -127,7 +127,7 @@ def rationalize_file(item_f, charset, mode='rb', lock=False):
             # explicitily decrement file ref
             del item_f
             return os.fdopen(n_fd)
-        except Exception, e:
+        except Exception as e:
             os.close(n_fd)
             raise e
 
@@ -140,7 +140,7 @@ def rationalize_file(item_f, charset, mode='rb', lock=False):
         try:
             _lock(n_fd, lock)
             return os.fdopen(n_fd)
-        except Exception, e:
+        except Exception as e:
             os.close(n_fd)
             raise e
 
@@ -149,7 +149,7 @@ def rationalize_file(item_f, charset, mode='rb', lock=False):
     try:
         _lock(f.fileno(), lock)
         return f
-    except Exception, e:
+    except Exception as e:
         f.close()
         raise e
 

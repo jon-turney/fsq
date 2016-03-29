@@ -77,18 +77,18 @@ class FSQWorkItem(object):
                 self.hostname = arguments[3]
                 self.tries = arguments[4]
                 self.arguments = tuple(arguments[5:])
-            except IndexError, e:
+            except IndexError as e:
                 raise FSQMalformedEntryError(errno.EINVAL, u'needed at least'\
                                              u' 4 arguments to unpack, got:'\
                                              u' {0}'.format(len(arguments)))
-            except ValueError, e:
+            except ValueError as e:
                 raise FSQTimeFmtError(errno.EINVAL, u'invalid date string'\
                                       u' for strptime fmt {0}:'\
                                       u' {1}'.format(_c.FSQ_TIMEFMT,
                                                      arguments[0]))
             try:
                 self.tries = int(self.tries)
-            except ValueError, e:
+            except ValueError as e:
                 raise FSQTimeFmtError(errno.EINVAL, u'tries must be an int,'\
                                       u' not {0}: {1}'.format(
                                         self.tries.__class__.__name__,
@@ -96,13 +96,13 @@ class FSQWorkItem(object):
             try:
                 check_ttl_max_tries(self.tries, self.enqueued_at,
                                     self.max_tries, self.ttl)
-            except (FSQMaxTriesError, FSQTTLExpiredError, ), e:
+            except (FSQMaxTriesError, FSQTTLExpiredError, ) as e:
                 e.strerror = u': '.join([
                     e.strerror,
                     u'for item {0}; failed permanently'.format(self.id),
                 ])
                 raise e
-        except Exception, e:
+        except Exception as e:
             try:
                 # unhandled exceptions are perm failures
                 self.fail_perm()
@@ -129,7 +129,7 @@ class FSQWorkItem(object):
             self.item = rationalize_file(fsq_path.item(self.queue, self.id,
                                                        host=self.host),
                                          _c.FSQ_CHARSET, lock=self.lock)
-        except (OSError, IOError, ), e:
+        except (OSError, IOError, ) as e:
             if e.errno == errno.ENOENT:
                 raise FSQWorkItemError(e.errno, u'no such item in queue {0}:'\
                                        u' {1}'.format(self.queue, self.id))

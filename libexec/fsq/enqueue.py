@@ -10,7 +10,7 @@ import getopt
 import sys
 import fsq
 import os
-import StringIO
+from io import StringIO
 
 
 _PROG = "fsq-enqueue"
@@ -73,7 +73,7 @@ def main(argv):
                 'user=',
                 'group=',
                 'mode=', ))
-    except getopt.GetoptError, e:
+    except getopt.GetoptError as e:
         barf('invalid flag: -{0}{1}'.format('-' if 1 < len(e.opt) else '',
              e.opt))
     try:
@@ -112,9 +112,9 @@ def main(argv):
         queue = args[0]
         fsq_args = args[1:]
         if item is None and empty is False:
-            item = StringIO.StringIO(sys.stdin.read())
+            item = StringIO(sys.stdin.read())
         elif item is None and empty is True:
-            item = StringIO.StringIO('')
+            item = StringIO('')
         #else item was set with file flag
         fsq.venqueue(queue, item, fsq_args, user=user, group=group, mode=mode)
         item.close()
@@ -122,13 +122,11 @@ def main(argv):
             fsq.trigger_pull(queue)
         chirp('{0} queue: new item queued using args: {1}'.format(args[0], 
                                                                   args[1:])) 
-    except fsq.FSQCoerceError, e:
+    except fsq.FSQCoerceError as e:
         barf('cannot coerce queue; charset={0}'.format(_CHARSET))
-    except fsq.FSQError, e:
+    except fsq.FSQError as e:
         shout(e.strerror.encode(_CHARSET))
 
 
 if __name__ == '__main__':
     main(sys.argv)
-
-

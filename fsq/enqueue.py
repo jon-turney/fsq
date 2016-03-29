@@ -16,7 +16,11 @@ import datetime
 import socket
 import select
 
-from cStringIO import StringIO
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from io import StringIO
+
 from contextlib import closing
 
 from . import FSQEnqueueError, FSQCoerceError, FSQError, FSQReenqueueError,\
@@ -117,7 +121,7 @@ def venqueue(trg_queue, item_f, args, user=None, group=None, mode=None):
     # open source file
     try:
         src_file = rationalize_file(item_f, _c.FSQ_CHARSET)
-    except (OSError, IOError, ), e:
+    except (OSError, IOError, ) as e:
         raise FSQEnqueueError(e.errno, wrap_io_os_err(e))
     try:
         real_file = True if hasattr(src_file, 'fileno') else False
@@ -127,7 +131,7 @@ def venqueue(trg_queue, item_f, args, user=None, group=None, mode=None):
                                     tries, ) + tuple(args))
             tmp_name = os.path.join(fsq_path.tmp(trg_queue), item_name)
             trg_fd = os.open(tmp_name, os.O_WRONLY|os.O_CREAT|os.O_EXCL, mode)
-        except (OSError, IOError, ), e:
+        except (OSError, IOError, ) as e:
             if isinstance(e, FSQError):
                 raise e
             raise FSQEnqueueError(e.errno, wrap_io_os_err(e))
@@ -144,7 +148,7 @@ def venqueue(trg_queue, item_f, args, user=None, group=None, mode=None):
                             msg = os.read(reads[0].fileno(), 2048)
                             if 0 == len(msg):
                                 break
-                        except (OSError, IOError, ), e:
+                        except (OSError, IOError, ) as e:
                             if e.errno in (errno.EWOULDBLOCK, errno.EAGAIN,):
                                 continue
                             raise e
@@ -167,22 +171,22 @@ def venqueue(trg_queue, item_f, args, user=None, group=None, mode=None):
 
                 # return the queue item id (filename)
                 return item_name
-        except Exception, e:
+        except Exception as e:
             try:
                 os.close(trg_fd)
-            except (OSError, IOError, ), err:
+            except (OSError, IOError, ) as err:
                 if err.errno != errno.EBADF:
                     raise FSQEnqueueError(err.errno, wrap_io_os_err(err))
             try:
                 if tmp_name is not None:
                     os.unlink(tmp_name)
-            except (OSError, IOError, ), err:
+            except (OSError, IOError, ) as err:
                 if err.errno != errno.ENOENT:
                    raise FSQEnqueueError(err.errno, wrap_io_os_err(err))
             try:
                 if name is not None:
                     os.unlink(name)
-            except OSError, err:
+            except OSError as err:
                 if err.errno != errno.ENOENT:
                    raise FSQEnqueueError(err.errno, wrap_io_os_err(err))
             if (isinstance(e, OSError) or isinstance(e, IOError)) and\
@@ -260,7 +264,7 @@ def vreenqueue(item_f, *args, **kwargs):
             src_file = item_f
         else:
             src_file = rationalize_file(item_f, _c.FSQ_CHARSET)
-    except (OSError, IOError, ), e:
+    except (OSError, IOError, ) as e:
         raise FSQReenqueueError(e.errno, wrap_io_os_err(e))
     tmp_names = []
     try:
@@ -271,14 +275,14 @@ def vreenqueue(item_f, *args, **kwargs):
             try:
                 try:
                     os.link(fsq_path.item(src_queue, item_id), tmp_name)
-                except (OSError, IOError, ), e:
+                except (OSError, IOError, ) as e:
                     if not e.errno == errno.EEXIST:
                         raise FSQReenqueueError(e.errno, wrap_io_os_err(e))
                 for queue, host in paths:
                     try:
                         os.link(tmp_name, os.path.join(fsq_path.item(queue,
                                                        item_id, host=host)))
-                    except (OSError, IOError, ), e:
+                    except (OSError, IOError, ) as e:
                         if not e.errno == errno.EEXIST:
                             raise FSQReenqueueError(e.errno, wrap_io_os_err(e))
             finally:
@@ -295,7 +299,7 @@ def vreenqueue(item_f, *args, **kwargs):
                         tmp_fo = os.open(tmp_name, os.O_RDWR|os.O_CREAT|\
                                                os.O_TRUNC, _c.FSQ_ITEM_MODE)
                         tmp_fos.append(os.fdopen(tmp_fo, 'wb', 1))
-                    except Exception, e:
+                    except Exception as e:
                         raise FSQReenqueueError(wrap_io_os_err(e))
                 real_file = True if hasattr(src_file, 'fileno') else False
                 # read src_file once
@@ -304,7 +308,7 @@ def vreenqueue(item_f, *args, **kwargs):
                         reads, dis, card = select.select([src_file], [], [])
                         try:
                             chunk = os.read(reads[0].fileno(), 2048)
-                        except (OSError, IOError, ), e:
+                        except (OSError, IOError, ) as e:
                             if e.errno in (errno.EWOULDBLOCK, errno.EAGAIN,):
                                 continue
                             raise
@@ -325,7 +329,7 @@ def vreenqueue(item_f, *args, **kwargs):
                     try:
                         os.link(tmp_name, os.path.join(fsq_path.item(queue,
                                                        item_id, host=host)))
-                    except (OSError, IOError, ), e:
+                    except (OSError, IOError, ) as e:
                         if link and not e.errno == errno.EEXIST:
                             raise FSQReenqueueError(e.errno, wrap_io_os_err(e))
                     finally:
@@ -334,13 +338,13 @@ def vreenqueue(item_f, *args, **kwargs):
                 for tmp_fo in tmp_fos:
                     tmp_fo.close()
         return item_id
-    except Exception, e:
+    except Exception as e:
         try:
             if link:
                 tmp_name = os.path.join(fsq_path.tmp(src_queue, item_id))
                 try:
                     os.unlink(tmp_name)
-                except (OSError, IOError, ), err:
+                except (OSError, IOError, ) as err:
                     if err.errno == errno.ENOENT:
                         pass
                 raise FSQReenqueueError(err.errno, wrap_io_os_err(err))
@@ -348,14 +352,14 @@ def vreenqueue(item_f, *args, **kwargs):
                 for tmp_name in tmp_names:
                     try:
                         os.unlink(tmp_name)
-                    except (OSError, IOError, ), err:
+                    except (OSError, IOError, ) as err:
                         if err.errno == errno.ENOENT:
                             pass
                         raise FSQReenqueueError(err.errno, wrap_io_os_err(err))
-        except (OSError, IOError, ), err:
+        except (OSError, IOError, ) as err:
             if err.errno != errno.ENOENT:
                raise FSQReenqueueError(err.errno, wrap_io_os_err(err))
-        except OSError, err:
+        except OSError as err:
             if err.errno != errno.ENOENT:
                raise FSQReenqueueError(err.errno, wrap_io_os_err(err))
         if (isinstance(e, OSError) or isinstance(e, IOError)) and\

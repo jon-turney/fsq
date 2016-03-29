@@ -66,7 +66,7 @@ def main(argv):
                 'user=',
                 'group=',
                 'mode=', ))
-    except getopt.GetoptError, e:
+    except getopt.GetoptError as e:
         barf('invalid flag: -{0}{1}'.format('-' if 1 < len(e.opt) else '',
              e.opt))
     try:
@@ -92,9 +92,9 @@ def main(argv):
         for arg in args:
             fsq.down(queue=arg, user=user, group=group, mode=mode)
             chirp('{0}: down'.format(arg)) 
-    except fsq.FSQCoerceError, e:
+    except fsq.FSQCoerceError as e:
         barf('cannot coerce queue; charset={0}'.format(_CHARSET))
-    except fsq.FSQError, e:
+    except fsq.FSQError as e:
         shout(e.strerror.encode(_CHARSET))
 
 

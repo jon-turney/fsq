@@ -79,7 +79,7 @@ class FSQScanGenerator(object):
         if hasattr(self, 'item'):
             del self.item
 
-    def next(self):
+    def __next__(self):
         while self._index < len(self.item_ids)-1:
             self._index += 1
             # always destroy self.item to close file if necessary
@@ -102,7 +102,7 @@ class FSQScanGenerator(object):
                                         max_tries=self.max_tries,
                                         no_open=self.no_open,
                                         host=host)
-            except (FSQWorkItemError, FSQCannotLockError, ), e:
+            except (FSQWorkItemError, FSQCannotLockError, ) as e:
                 # we discard on ENOENT -- e.g. something else already did the
                 #  work
                 # or EAGAIN -- e.g. cannot lock because something else is
@@ -160,7 +160,7 @@ def scan(queue, lock=None, ttl=None, max_tries=None, ignore_down=False,
                 for item in os.listdir(fsq_path.queue(queue, trg_host)):
                     item_ids.append((trg_host, item))
             item_ids.sort(key=lambda x: x[1])
-    except (OSError, IOError, ), e:
+    except (OSError, IOError, ) as e:
         if e.errno == errno.ENOENT:
             raise FSQScanError(e.errno, u'no such queue:'\
                                u' {0}'.format(queue))

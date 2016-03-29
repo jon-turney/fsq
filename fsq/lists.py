@@ -15,7 +15,7 @@ from .internal import wrap_io_os_err
 def _list_dir(root, ex):
     try:
         return tuple(os.listdir(root))
-    except (OSError, IOError), e:
+    except (OSError, IOError) as e:
         raise ex(e.errno, wrap_io_os_err(e))
 
 def hosts(trg_queue):

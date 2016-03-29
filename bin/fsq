@@ -20,7 +20,7 @@ _PROG = sys.argv[0]
 # broken.
 def shout(msg, f=sys.stderr):
     '''Log to file (usually stderr), with progname: <log>'''
-    print >> f, "{0}: {1}".format(_PROG, msg)
+    print("{0}: {1}".format(_PROG, msg), file=f)
     f.flush()
 
 def barf(msg, exit=None, f=sys.stderr):
@@ -52,7 +52,7 @@ def usage(asked_for=0):
 
 try:
     import fsq
-except ImportError, e:
+except ImportError as e:
     barf('dependency failed; check build ({0})'.format(e.message), 2)
 
 
@@ -78,7 +78,7 @@ def exit_no_cmd(exec_dir, exit=None, f=sys.stderr):
                     seen.append(no_ext)
         shout('', f)
 
-    except ( OSError, IOError, ), e:
+    except ( OSError, IOError, ) as e:
         barf(': '.join([e.strerror, exec_dir]))
     sys.exit(exit)
 
@@ -95,7 +95,7 @@ def main(argv):
                                    'root-dir=', 'queue-dir=', 'tmp-dir=',
                                    'done-dir=', 'down-file=',
                                    'trigger-fifo=', ))
-    except getopt.GetoptError, e:
+    except getopt.GetoptError as e:
         # bad usage
         barf('invalid flag: -{0}{1}'.format('-' if 1 < len(e.opt) else '',
              e.opt))
@@ -165,13 +165,13 @@ def main(argv):
         try:
             try:
                 fsq_prog_main = fsq_prog.main
-            except AttributeError, e:
+            except AttributeError as e:
                 barf('internal command error: {0}'.format(fsq_cmd))
 
             # DO THE DAMN THING
             try:
                 sys.exit(fsq_prog_main([' '.join([_PROG, fsq_cmd])] + args[1:]))
-            except ( Exception, ), e:
+            except ( Exception, ) as e:
                 barf('internal command error: {0} ({1}: {2})'.format(fsq_cmd,
                      e.__class__.__name__, e.message))
         finally:

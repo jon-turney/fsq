@@ -21,7 +21,7 @@ from .internal import uid_gid, wrap_io_os_err
 def _cleanup(clean_dir):
     try:
         os.rmdir(clean_dir)
-    except (OSError, IOError, ), e:
+    except (OSError, IOError, ) as e:
         # suppress ENOENT, as we don't care if we can't remove something that
         # wasn't there, we only care that it isn't there.
         if e.errno != errno.ENOENT:
@@ -38,7 +38,7 @@ def _instdir(trg_dir, mode, uid, gid):
                 os.fchown(fd, uid, gid)
         finally:
             os.close(fd)
-    except (OSError, IOError, ), e:
+    except (OSError, IOError, ) as e:
         _cleanup(trg_dir)
         raise FSQInstallError(e.errno, wrap_io_os_err(e))
 
@@ -48,7 +48,7 @@ def _tmp_trg(trg_queue, root=_c.FSQ_ROOT):
     try:
         tmp_queue = tempfile.mkdtemp(u'', u''.join([u'.', trg_queue]), root)
         return tmp_queue, os.path.basename(tmp_queue)
-    except Exception, e:
+    except Exception as e:
         if tmp_queue is not None:
             _cleanup(tmp_queue)
         if isinstance(e, ( OSError, IOError, )):
@@ -65,7 +65,7 @@ def _remove_dir(path, tmp_full, trg_queue):
         os.rename(path, tmp_full)
         # this makes me uneasy ... but here we go magick
         shutil.rmtree(tmp_full)
-    except (OSError, IOError, ), e:
+    except (OSError, IOError, ) as e:
         if e.errno == errno.ENOENT:
             raise FSQInstallError(e.errno, u'no such queue:'\
                                   ' {0}'.format(trg_queue))
@@ -125,7 +125,7 @@ def install(trg_queue, is_down=False, is_triggered=False, user=None,
 
         # atomic commit -- by rename
         os.rename(tmp_full, fsq_path.base(trg_queue))
-    except (OSError, IOError, ), e:
+    except (OSError, IOError, ) as e:
         shutil.rmtree(tmp_full)
         if e.errno == errno.ENOTEMPTY:
             raise FSQInstallError(e.errno, u'queue exists: {0}'.format(
@@ -148,7 +148,7 @@ def uninstall(trg_queue, item_user=None, item_group=None, item_mode=None):
     try:
         down(trg_queue, user=item_user, group=item_group,
              mode=(_c.FSQ_ITEM_MODE if item_mode is None else item_mode))
-    except FSQError, e:
+    except FSQError as e:
         raise FSQInstallError(e.errno, wrap_io_os_err(e))
     tmp_full, tmp_queue = _tmp_trg(trg_queue, _c.FSQ_ROOT)
     _remove_dir(fsq_path.base(trg_queue), tmp_full, trg_queue)
@@ -165,7 +165,7 @@ def uninstall_host(trg_queue, *hosts, **kwargs):
         try:
             down_host(trg_queue, host, user=item_user, group=item_group,
                  mode=(_c.FSQ_ITEM_MODE if item_mode is None else item_mode))
-        except FSQError, e:
+        except FSQError as e:
             raise FSQInstallError(e.errno, wrap_io_os_err(e))
         tmp_full, tmp_queue = _tmp_trg(host, fsq_path.hosts(trg_queue))
         _remove_dir(fsq_path.base(trg_queue, host), tmp_full, trg_queue)
@@ -187,7 +187,7 @@ def install_host(trg_queue, *hosts, **kwargs):
     host_path = fsq_path.hosts(trg_queue)
     try:
         _instdir(host_path, mode, uid, gid)
-    except (OSError, IOError, ), e:
+    except (OSError, IOError, ) as e:
         if e.errno not in ( errno.EEXIST, errno.ENOTEMPTY, ):
             raise FSQInstallError(e.errno, wrap_io_os_err(e))
     if hosts:
@@ -223,7 +223,7 @@ def install_host(trg_queue, *hosts, **kwargs):
 
                 # atomic commit -- by rename
                 os.rename(tmp_full, fsq_path.base(trg_queue, host))
-            except (OSError, IOError, ), e:
+            except (OSError, IOError, ) as e:
                 shutil.rmtree(tmp_full)
                 if e.errno == errno.ENOTEMPTY:
                     raise FSQInstallError(e.errno, u'queue exists: {0}'.format(

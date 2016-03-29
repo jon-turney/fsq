@@ -60,10 +60,10 @@ def main(argv):
     except ( fsq.FSQEnvError, fsq.FSQCoerceError, ):
         shout('invalid argument for flag: {0}'.format(flag))
         return fsq.const('FSQ_FAIL_PERM')
-    except fsq.FSQInstallError, e:
+    except fsq.FSQInstallError as e:
         shout(e.strerror)
         return fsq.const('FSQ_FAIL_TMP')
-    except getopt.GetoptError, e:
+    except getopt.GetoptError as e:
         shout('invalid flag: -{0}{1}'.format('-' if 1 < len(e.opt) else '',
               e.opt))
         return fsq.const('FSQ_FAIL_TMP')

@@ -63,10 +63,10 @@ def done_item(item, code):
         else:
             fsq.fail_perm(item)
             shout('{0}: failed permanantly'.format(item.id))
-    except fsq.FSQEnqueueError, e:
+    except fsq.FSQEnqueueError as e:
         shout(e.strerror.encode(_CHARSET))
         return -1
-    except fsq.FSQError, e:
+    except fsq.FSQError as e:
         shout(e.strerror.encode(_CHARSET))
     return 0
 

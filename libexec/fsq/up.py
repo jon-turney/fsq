@@ -55,7 +55,7 @@ def main(argv):
     _PROG = argv[0]
     try:
         opts, args = getopt.getopt(argv[1:], 'hvd:', ( 'help', 'down-file'))
-    except getopt.GetoptError, e:
+    except getopt.GetoptError as e:
         barf('invalid flag: -{0}{1}'.format('-' if 1 < len(e.opt) else '',
              e.opt))
     try:
@@ -71,9 +71,9 @@ def main(argv):
         try:
                 fsq.up(arg)
                 chirp('{0}: up'.format(arg))
-        except fsq.FSQCoerceError, e:
+        except fsq.FSQCoerceError as e:
             barf('cannot coerce queue; charset={0}'.format(_CHARSET))
-        except fsq.FSQError, e:
+        except fsq.FSQError as e:
             barf(e.strerror.encode(_CHARSET))
 
 

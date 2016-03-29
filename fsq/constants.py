@@ -77,5 +77,5 @@ try:
     FSQ_MAX_TRIES = int(os.environ.get("FSQ_MAX_TRIES", 1))
     # time-to-live (in seconds) for any queue item -- 0 is infinite
     FSQ_TTL = int(os.environ.get("FSQ_TTL", 0))
-except ValueError, e:
+except ValueError as e:
     raise FSQEnvError(errno.EINVAL, e.message)

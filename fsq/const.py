@@ -43,7 +43,7 @@ def set_const(const, val):
     should_be = cur.__class__
     try:
         if not isinstance(val, should_be):
-            if should_be is unicode or cur is None:
+            if should_be is str or cur is None:
                 val = coerce_unicode(val, _c.FSQ_CHARSET)
             elif should_be is int and const.endswith('MODE'):
                 val = int(val, 8)

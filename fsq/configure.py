@@ -35,7 +35,7 @@ def _dflts(user, group, mode):
 def _cleanup(path, e):
     try:
         os.unlink(path)
-    except (OSError, IOError, ), err:
+    except (OSError, IOError, ) as err:
         if err.errno != errno.ENOENT:
             raise FSQConfigError(err.errno, wrap_io_os_err(err))
     _raise(path, e)
@@ -44,7 +44,7 @@ def _queue_ok(q_path):
     # TODO: refactor to use fopen / fstatat, python doesn't support this
     try:
         os.stat(q_path)
-    except (OSError, IOError, ), e:
+    except (OSError, IOError, ) as e:
         if e.errno == errno.ENOENT:
             raise FSQConfigError(e.errno, _NSQ.format(q_path))
         raise FSQConfigError(e.errno, wrap_io_os_err(e))
@@ -62,7 +62,7 @@ def down(queue, user=None, group=None, mode=None, host=None) :
         try:
             fd = os.open(down_path, os.O_CREAT|os.O_WRONLY|os.O_EXCL, mode)
             created = True
-        except (OSError, IOError, ), e:
+        except (OSError, IOError, ) as e:
             if e.errno != errno.EEXIST:
                 raise e
             fd = os.open(down_path, os.O_CREAT|os.O_WRONLY, mode)
@@ -70,7 +70,7 @@ def down(queue, user=None, group=None, mode=None, host=None) :
             os.fchown(fd, *uid_gid(user, group, fd=fd))
         if not created:
             os.fchmod(fd, mode)
-    except (OSError, IOError, ), e:
+    except (OSError, IOError, ) as e:
         if created:
             _cleanup(down_path, e)
         _raise(down_path, e)
@@ -85,7 +85,7 @@ def up(queue, host=None):
     _queue_ok(os.path.dirname(down_path))
     try:
         os.unlink(down_path)
-    except (OSError, IOError, ), e:
+    except (OSError, IOError, ) as e:
         if e.errno != errno.ENOENT:
             raise FSQConfigError(e.errno, wrap_io_os_err(e))
 
@@ -98,7 +98,7 @@ def is_down(queue, host=None):
     # access due to permissions, we want to raise EPERM, not return False)
     try:
         os.stat(down_path)
-    except (OSError, IOError, ), e:
+    except (OSError, IOError, ) as e:
         if e.errno == errno.ENOENT:
             return False
         raise FSQConfigError(e.errno, wrap_io_os_err(e))
@@ -115,7 +115,7 @@ def trigger(queue, user=None, group=None, mode=None, trigger=_c.FSQ_TRIGGER):
         try:
             os.mkfifo(trigger_path.encode(_c.FSQ_CHARSET), mode)
             created = True
-        except (OSError, IOError, ), e:
+        except (OSError, IOError, ) as e:
             # if failure not due to existence, rm and bail
             if e.errno != errno.EEXIST:
                 raise e
@@ -126,7 +126,7 @@ def trigger(queue, user=None, group=None, mode=None, trigger=_c.FSQ_TRIGGER):
         os.chmod(trigger_path, mode)
         if user is not None or group is not None:
             os.chown(trigger_path, *uid_gid(user, group, path=trigger_path))
-    except (OSError, IOError, ), e:
+    except (OSError, IOError, ) as e:
         # only rm if we created and failed, otherwise leave it and fail
         if created:
             _cleanup(trigger_path, e)
@@ -139,7 +139,7 @@ def untrigger(queue, trigger=_c.FSQ_TRIGGER):
     _queue_ok(os.path.dirname(trigger_path))
     try:
         os.unlink(trigger_path)
-    except (OSError, IOError, ), e:
+    except (OSError, IOError, ) as e:
         if e.errno != errno.ENOENT:
             raise FSQConfigError(e.errno, wrap_io_os_err(e))
 
@@ -153,7 +153,7 @@ def trigger_pull(queue, ignore_listener=False, trigger=_c.FSQ_TRIGGER):
         fd = os.open(trigger_path,
                      os.O_NDELAY|os.O_NONBLOCK|os.O_APPEND|os.O_WRONLY)
         os.write(fd, '\0')
-    except (OSError, IOError, ), e:
+    except (OSError, IOError, ) as e:
         if e.errno != errno.ENXIO:
             if e.errno != errno.EAGAIN and e.errno != errno.EWOULDBLOCK:
                 raise FSQTriggerPullError(e.errno, wrap_io_os_err(e))

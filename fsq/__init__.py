@@ -10,7 +10,7 @@
 # This software is for POSIX compliant systems only.
 
 # ORDER MATTERS HERE -- SOME MODULES ARE DEPENDANT ON OTHERS
-from exceptions import FSQError, FSQEnvError, FSQEncodeError,\
+from .exceptions import FSQError, FSQEnvError, FSQEncodeError,\
                        FSQTimeFmtError, FSQMalformedEntryError,\
                        FSQCoerceError, FSQEnqueueError, FSQConfigError,\
                        FSQPathError, FSQInstallError, FSQCannotLockError,\
@@ -21,55 +21,55 @@ from exceptions import FSQError, FSQEnvError, FSQEncodeError,\
                        FSQRemoteTriggerError
 
 # constants relies on: exceptions, internal
-import constants
+from . import constants
 
 # const relies on: constants, exceptions, internal
-from const import const, set_const # has tests
+from .const import const, set_const # has tests
 
 # path relies on: exceptions, constants, internal
-import path # has tests
+from . import path # has tests
 
 # lists relies on: path
-from lists import hosts, queues
+from .lists import hosts, queues
 
 # configure relies on: exceptions, path, constants, internal, hosts
-from configure import down, up, is_down, trigger, untrigger, trigger_pull,\
+from .configure import down, up, is_down, trigger, untrigger, trigger_pull,\
                       down_host, up_host, host_is_down, host_trigger,\
                       host_untrigger, host_trigger_pull # has tests
 
 # install relies on exceptions, path, constants, configure, internal, hosts
-from install import install, uninstall, install_host, uninstall_host # has tests
+from .install import install, uninstall, install_host, uninstall_host # has tests
 
 # encode relies on: constants, exceptions, internal
-from encode import encode, decode # has tests
+from .encode import encode, decode # has tests
 
 # construct relies on: constants, exceptions, encode, internal
-from construct import construct, deconstruct # has tests
+from .construct import construct, deconstruct # has tests
 
 # done relies on: constants, exceptions, path, internal, mkitem
-from done import done, success, fail, fail_tmp, fail_perm
+from .done import done, success, fail, fail_tmp, fail_perm
 
 # items relies on: exceptions, constants, path, construct, internal
-from items import FSQWorkItem
+from .items import FSQWorkItem
 
 # enqueue relies on: constants, exceptions, path, internal, mkitem
-from enqueue import enqueue, senqueue, venqueue, vsenqueue, reenqueue,\
+from .enqueue import enqueue, senqueue, venqueue, vsenqueue, reenqueue,\
                     sreenqueue, vreenqueue, vsreenqueue
 
 # scan relies on: exceptions, constants, path, items, configure, internal
-from scan import FSQScanGenerator, scan, scan_forever
+from .scan import FSQScanGenerator, scan, scan_forever
 
 # remote.v1 relies on: enqueue
-import remote
+from . import remote
 
 # push relies on: exceptions, constants, items and configure
-from push import push, remote_trigger_pull
+from .push import push, remote_trigger_pull
 
 # utility relies on: exceptions, scan, enqueue and done
-from utility import fork_exec_items
+from .utility import fork_exec_items
 
 # ratelimit relies on: nothing
-from ratelimit import ratelimited, RatelimitedIterator
+from .ratelimit import ratelimited, RatelimitedIterator
 
 __all__ = [ 'FSQError', 'FSQEnvError', 'FSQEncodeError', 'FSQTimeFmtError',
             'FSQMalformedEntryError', 'FSQCoerceError', 'FSQEnqueueError',

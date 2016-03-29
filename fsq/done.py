@@ -33,7 +33,7 @@ def fail_tmp(item, max_tries=None, ttl=None):
         os.rename(fsq_path.item(item.queue, item.id, host=item.host),
 				  fsq_path.item(item.queue, new_name, host=item.host))
         return new_name
-    except (FSQMaxTriesError, FSQTTLExpiredError, FSQEnqueueError, ), e:
+    except (FSQMaxTriesError, FSQTTLExpiredError, FSQEnqueueError, ) as e:
         fail_perm(item)
         e.strerror = u': '.join([
             e.strerror,
@@ -51,7 +51,7 @@ def fail_perm(item):
     try:
         os.rename(fsq_path.item(trg_queue, item_id, host=host),
                   os.path.join(fsq_path.fail(trg_queue, host=host), item_id))
-    except (OSError, IOError, ), e:
+    except (OSError, IOError, ) as e:
         raise FSQFailError(e.errno, u'cannot mv item to fail: {0}:'\
                            u' {1}'.format(item.id, wrap_io_os_err(e)))
 
@@ -79,11 +79,11 @@ def success(item):
         os.rename(fsq_path.item(trg_queue, item.id, host=item.host),
                   os.path.join(fsq_path.done(trg_queue, host=item.host),
                                item.id))
-    except AttributeError, e:
+    except AttributeError as e:
         # DuckType TypeError'ing
         raise TypeError(u'item must be an FSQWorkItem, not:'\
                         u' {0}'.format(item.__class__.__name__))
-    except (OSError, IOError, ), e:
+    except (OSError, IOError, ) as e:
         raise FSQDoneError(e.errno, u'cannot mv item to done: {0}:'\
                            u' {1}'.format(item.id, wrap_io_os_err(e)))
 

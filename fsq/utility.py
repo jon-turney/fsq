@@ -63,10 +63,10 @@ def done_item(item, code):
         else:
             fail_perm(item)
             shout('{0}: failed permanantly'.format(item.id))
-    except FSQEnqueueError, e:
+    except FSQEnqueueError as e:
         shout(e.strerror.encode(_CHARSET))
         return -1
-    except FSQError, e:
+    except FSQError as e:
         shout(e.strerror.encode(_CHARSET))
     return 0
 
@@ -114,9 +114,9 @@ def fork_exec_items(queue, ignore_down=False, no_open=False, host=False,
             items = scan(queue, ignore_down=ignore_down, no_open=no_open)
     except FSQDownError:
         barf('{0} is down')
-    except (FSQScanError, FSQPathError, ), e:
+    except (FSQScanError, FSQPathError, ) as e:
         barf(e.strerror)
-    except FSQCoerceError, e:
+    except FSQCoerceError as e:
         barf('cannot coerce queue; charset={0}'.format(_CHARSET))
 
     if max_rate:
@@ -140,13 +140,13 @@ def fork_exec_items(queue, ignore_down=False, no_open=False, host=False,
                     continue
                 try:
                     item_id = item.id.encode(_CHARSET)
-                except UnicodeEncodeError, e:
+                except UnicodeEncodeError as e:
                     barf('cannot coerce item id;'\
                          ' charset={0}'.format(_CHARSET))
                 chirp('working on {0} ...'.format(item_id))
                 try:
                     pid = os.fork()
-                except Exception, e:
+                except Exception as e:
                     barf("cannot fork; aborting")
 
                 if 0 == pid: # child fork
@@ -154,7 +154,7 @@ def fork_exec_items(queue, ignore_down=False, no_open=False, host=False,
                         try:
                             # if available, open item for reading on stdin
                             os.dup2(item.item.fileno(), sys.stdin.fileno())
-                        except ( OSError, IOError, ), e:
+                        except ( OSError, IOError, ) as e:
                             barf('cannot dup: {0}'.format(e.strerror))
                     # setup the environment -- so C-style it hurts
                     if set_env and -1 == setenv(item, timefmt):
@@ -167,22 +167,22 @@ def fork_exec_items(queue, ignore_down=False, no_open=False, host=False,
                             if trigger:
                                 fsq.host_trigger_pull(queue, ignore_listener=True)
                             os._exit(0)
-                        except ( FSQReenqueueError ), e:
+                        except ( FSQReenqueueError ) as e:
                             shout('{0}: cannot reenqueue {0}'.format(e.strerror,
                                   item_id))
                             os._exit(fail_tmp)
-                        except Exception, e:
+                        except Exception as e:
                             shout('cannot reenqueue ({0}: {1})'.format(
                                   e.__class__.__name__, e.message))
                             os._exit(fail_tmp)
                     else:
                         try:
                             os.execvp(exec_args[0], exec_args + item.arguments)
-                        except ( OSError, IOError, ), e:
+                        except ( OSError, IOError, ) as e:
                             shout('{0}: cannot exec {0}'.format(e.strerror,
                                   queue))
                             os._exit(fail_tmp)
-                        except Exception, e:
+                        except Exception as e:
                             shout('cannot execvp ({0}: {1})'.format(
                                   e.__class__.__name__, e.message))
                             os._exit(fail_tmp)
@@ -203,7 +203,7 @@ def fork_exec_items(queue, ignore_down=False, no_open=False, host=False,
                             sys.exit(fail_tmp)
                         barf('{0}: processing terminated by signal {1};'\
                              ' aborting'.format(item_id, os.WTERMSIG(rc)))
-            except FSQError, e:
+            except FSQError as e:
                 shout(e.strerror.encode(_CHARSET))
             except StopIteration:
                 break
@@ -214,9 +214,9 @@ def fork_exec_items(queue, ignore_down=False, no_open=False, host=False,
                     pass
     except FSQDownError:
         barf('{0} is down'.format(queue))
-    except FSQError, e:
+    except FSQError as e:
         shout(e.strerror.encode(_CHARSET))
-    except FSQInstallError, e:
+    except FSQInstallError as e:
         shout(e.strerror)
         return const('FSQ_FAIL_TMP')
 

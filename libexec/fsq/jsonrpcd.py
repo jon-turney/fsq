@@ -91,7 +91,7 @@ def _spawn_worker(proxy, verbose, func, *args, **kwargs):
 
         try:
             func(*args, **kwargs)
-        except OSError, e:
+        except OSError as e:
             if e.errno == errno.EINTR: os._exit(1)
             elif e.errno == errno.ESRCH: os._exit(2)
             os._exit(3)
@@ -125,7 +125,7 @@ def main(argv):
 
     try:
         opts, args = getopt.getopt(argv[1:], _OPTIONS, _LONG_OPTS)
-    except getopt.GetoptError, e:
+    except getopt.GetoptError as e:
         barf("error: {0}".format(e))
     for opt, arg in opts:
         if opt in ("-w", "--workers="):
@@ -191,7 +191,7 @@ def main(argv):
                 c_status = "reloaded" if _signalled == signal.SIGHUP else "respawned"
                 _deferred_sig = _signalled = 0
                 shout("{0} pids: {1}".format(c_status, ", ".join((str(p) for p in _cpids))))
-        except OSError, e:
+        except OSError as e:
             if e.errno == errno.EINTR:
                 continue
             elif e.errno == errno.ESRCH:
@@ -205,9 +205,9 @@ def main(argv):
 if __name__ == "__main__":
     try:
         sys.exit(main(sys.argv))
-    except KeyboardInterrupt, e:
+    except KeyboardInterrupt as e:
         barf("received signal {0}".format(signal.SIGINT))
-    except Exception, e:
+    except Exception as e:
         barf("unexpected error: {0}".format(e))
 
 
