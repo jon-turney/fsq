@@ -18,7 +18,9 @@ from . import constants as _c, FSQPathError
 ####### INTERNAL MODULE FUNCTIONS AND ATTRIBUTES #######
 _ILLEGAL_NAMES=('.', '..', )
 
-def _path(queue, extra=None, root=_c.FSQ_ROOT):
+def _path(queue, extra=None, root=None):
+    if root is None:
+        root = _c.FSQ_ROOT
     args = [coerce_unicode(root, _c.FSQ_CHARSET), valid_name(queue)]
     if extra is not None:
         args.append(valid_name(extra))
